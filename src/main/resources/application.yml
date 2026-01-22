@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: leguan-agent
+  profiles:
+    active: local
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        model: gemma3:1b
+    openai:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode
+      api-key: your-api-key
+      chat:
+        options:
+          model: qwen-plus
+
+
+
+
+
+server:
+  port: 8787
+  servlet:
+    contextPath: /api
+
+
+# springdoc-openapi
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: com.leguan.agent.controller
+# knife4j
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
