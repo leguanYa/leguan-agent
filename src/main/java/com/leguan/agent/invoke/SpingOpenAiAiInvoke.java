@@ -19,10 +19,10 @@ public class SpingOpenAiAiInvoke implements CommandLineRunner {
     private ChatModel openAiChatModel;
     @Override
     public void run(String... args) throws Exception {
-        AssistantMessage output = openAiChatModel.call(new Prompt("你好，我是乐观，一个Java程序员, 那么你谁"))
-                .getResult()
-                .getOutput();
-        System.out.println("openAi回答 ====" + output.getText());
+//        AssistantMessage output = openAiChatModel.call(new Prompt("你好，我是乐观，一个Java程序员, 那么你谁"))
+//                .getResult()
+//                .getOutput();
+//        System.out.println("openAi回答 ====" + output.getText());
 
     }
 }
