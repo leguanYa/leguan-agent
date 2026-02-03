@@ -1,5 +1,7 @@
 package com.leguan.agent.app;
 
+import com.leguan.agent.advisor.MyLoggerAdvisor;
+import com.leguan.agent.advisor.ReReadingAdvisor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
@@ -22,7 +24,7 @@ public class LeGuanLoveApp {
             "恋爱状态询问沟通、习惯差异引发的矛盾；已婚状态询问家庭责任与亲属关系处理的问题。" +
             "引导用户详述事情经过、对方反应及自身想法，以便给出专属解决方案。";
 
-    public LeGuanLoveApp(ChatModel openAiChatModel) {
+    public LeGuanLoveApp(ChatModel ollamaChatModel) {
         // 初始化基于内存的对话记忆
 
         InMemoryChatMemoryRepository inMemoryChatMemoryRepository = new InMemoryChatMemoryRepository();
@@ -30,10 +32,14 @@ public class LeGuanLoveApp {
                 .chatMemoryRepository(inMemoryChatMemoryRepository)
                 .maxMessages(10)
                 .build();
-        chatClient = ChatClient.builder(openAiChatModel)
+        chatClient = ChatClient.builder(ollamaChatModel)
                 .defaultSystem(SYSTEM_PROMPT)
                 .defaultAdvisors(
-                        MessageChatMemoryAdvisor.builder(memory).build()
+                        MessageChatMemoryAdvisor.builder(memory).build(),
+                        // 自定义拦截器
+                        new MyLoggerAdvisor(),
+                        // 自定义Re2拦截器
+                        new ReReadingAdvisor()
                 )
                 .build();
     }
