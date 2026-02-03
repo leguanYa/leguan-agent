@@ -12,6 +12,8 @@ import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 
 @Component
 @Slf4j
@@ -24,7 +26,7 @@ public class LeGuanLoveApp {
             "恋爱状态询问沟通、习惯差异引发的矛盾；已婚状态询问家庭责任与亲属关系处理的问题。" +
             "引导用户详述事情经过、对方反应及自身想法，以便给出专属解决方案。";
 
-    public LeGuanLoveApp(ChatModel ollamaChatModel) {
+    public LeGuanLoveApp(ChatModel openAiChatModel) {
         // 初始化基于内存的对话记忆
 
         InMemoryChatMemoryRepository inMemoryChatMemoryRepository = new InMemoryChatMemoryRepository();
@@ -32,14 +34,14 @@ public class LeGuanLoveApp {
                 .chatMemoryRepository(inMemoryChatMemoryRepository)
                 .maxMessages(10)
                 .build();
-        chatClient = ChatClient.builder(ollamaChatModel)
+        chatClient = ChatClient.builder(openAiChatModel)
                 .defaultSystem(SYSTEM_PROMPT)
                 .defaultAdvisors(
                         MessageChatMemoryAdvisor.builder(memory).build(),
                         // 自定义拦截器
-                        new MyLoggerAdvisor(),
+                        new MyLoggerAdvisor()
                         // 自定义Re2拦截器
-                        new ReReadingAdvisor()
+//                        new ReReadingAdvisor()
                 )
                 .build();
     }
@@ -63,5 +65,22 @@ public class LeGuanLoveApp {
         return content;
     }
 
+    record LoveReport(String tittle, List<String> suggestions) {
+    }
+
+
+    public LoveReport doChatWithReport(String message, String chatId) {
+        LoveReport entity = chatClient
+                .prompt()
+                .user(message)
+                .system(SYSTEM_PROMPT + "每次对话都要生成恋爱结果，标题为{用户名}的恋爱报告，内容建议为字符串列表")
+                .advisors(spec ->
+                        spec.param(ChatMemory.CONVERSATION_ID, chatId)
+                )
+                .call()
+                .entity(LoveReport.class);
+        log.info("loveReport : {}", entity);
+        return entity;
+    }
 }
 

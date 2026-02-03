@@ -31,4 +31,13 @@ class LeGuanLoveAppTest {
         Assertions.assertNotNull(answer);
     }
 
+    @Test
+    void doChatWithReport() {
+
+        String chatId = UUID.randomUUID().toString();
+        // 第一轮
+        String message = "你好，我是程序员乐观,我想让另一半（向日葵）更爱我，我不知道该怎么做";
+        LeGuanLoveApp.LoveReport loveReport = leGuanLoveApp.doChatWithReport(message, chatId);
+        Assertions.assertNotNull(loveReport);
+    }
 }

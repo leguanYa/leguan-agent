@@ -43,6 +43,9 @@ public class MyLoggerAdvisor implements CallAdvisor, StreamAdvisor {
 	}
 
 	protected void logResponse(ChatClientResponse chatClientResponse) {
+		Integer totalTokens = chatClientResponse.chatResponse().getMetadata().getUsage().getTotalTokens();
+		String model = chatClientResponse.chatResponse().getMetadata().getModel();
+		log.info("AI one 使用的模型:{}, 消耗了多少token: {}", model, totalTokens);
 		log.info("AI one response: {}", chatClientResponse.chatResponse().getResult().getOutput().getText());
 	}
 
