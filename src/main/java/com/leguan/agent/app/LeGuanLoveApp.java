@@ -11,8 +11,15 @@ import org.springframework.ai.chat.memory.InMemoryChatMemoryRepository;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -22,12 +29,20 @@ public class LeGuanLoveApp {
 
     private final ChatClient chatClient;
 
-    private static final String SYSTEM_PROMPT = "扮演深耕恋爱心理领域的专家。开场向用户表明身份，告知用户可倾诉恋爱难题。" +
-            "围绕单身、恋爱、已婚三种状态提问：单身状态询问社交圈拓展及追求心仪对象的困扰；" +
-            "恋爱状态询问沟通、习惯差异引发的矛盾；已婚状态询问家庭责任与亲属关系处理的问题。" +
-            "引导用户详述事情经过、对方反应及自身想法，以便给出专属解决方案。";
+    // 系统提示词
+    private final PromptTemplate systemPrompt;
 
-    public LeGuanLoveApp(ChatModel openAiChatModel) {
+    // 用户提示词
+    private final PromptTemplate userPrompt;
+
+
+
+    public LeGuanLoveApp(ChatModel openAiChatModel,
+                         @Value("classpath:/prompts/love-system.st")Resource systemPromptResource,
+                         @Value("classpath:/prompts/love-user.st")Resource userPromptResource)
+                        throws IOException {
+        this.systemPrompt = new PromptTemplate(systemPromptResource.getContentAsString(StandardCharsets.UTF_8));
+        this.userPrompt = new PromptTemplate(userPromptResource.getContentAsString(StandardCharsets.UTF_8));
         // 初始化基于文件的对话记忆
         String fileDir = System.getProperty("user.dir") + "/tmp/chat-memory";
         MyFileChatMemoryRepository  chatMemoryRepository = new MyFileChatMemoryRepository(fileDir);
@@ -38,7 +53,7 @@ public class LeGuanLoveApp {
                 .maxMessages(10)
                 .build();
         chatClient = ChatClient.builder(openAiChatModel)
-                .defaultSystem(SYSTEM_PROMPT)
+                .defaultSystem(systemPrompt.render())
                 .defaultAdvisors(
                         MessageChatMemoryAdvisor.builder(memory).build(),
                         // 自定义拦截器
@@ -68,15 +83,20 @@ public class LeGuanLoveApp {
         return content;
     }
 
-    record LoveReport(String tittle, List<String> suggestions) {
+
+    record LoveReport(String tittle, List<String> suggestions, List<String> locations) {
     }
 
 
     public LoveReport doChatWithReport(String message, String chatId) {
+
+        HashMap<String, Object> userPromptMap = new HashMap<>();
+        userPromptMap.put("count", 5);
+        String render = userPrompt.render(userPromptMap);
         LoveReport entity = chatClient
                 .prompt()
-                .user(message)
-                .system(SYSTEM_PROMPT + "每次对话都要生成恋爱结果，标题为{用户名}的恋爱报告，内容建议为字符串列表")
+                .user(message + "\n" + render)
+                .system(systemPrompt.render() + "每次对话都要生成恋爱结果，标题为{用户名}的恋爱报告，内容建议为字符串列表")
                 .advisors(spec ->
                         spec.param(ChatMemory.CONVERSATION_ID, chatId)
                 )

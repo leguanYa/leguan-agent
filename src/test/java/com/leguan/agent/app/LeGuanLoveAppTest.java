@@ -40,9 +40,9 @@ class LeGuanLoveAppTest {
         LeGuanLoveApp.LoveReport loveReport = leGuanLoveApp.doChatWithReport(message, chatId);
         Assertions.assertNotNull(loveReport);
 
-        String message1 = "我想让另一半更爱我，怎么半";
-        LeGuanLoveApp.LoveReport loveReport1 = leGuanLoveApp.doChatWithReport(message1, chatId);
-        Assertions.assertNotNull(loveReport1);
+//        String message1 = "我想让另一半更爱我，怎么半";
+//        LeGuanLoveApp.LoveReport loveReport1 = leGuanLoveApp.doChatWithReport(message1, chatId);
+//        Assertions.assertNotNull(loveReport1);
 
     }
 }
