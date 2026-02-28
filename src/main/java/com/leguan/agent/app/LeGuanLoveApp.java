@@ -6,6 +6,7 @@ import com.leguan.agent.repository.MyFileChatMemoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.InMemoryChatMemoryRepository;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
@@ -13,6 +14,7 @@ import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -104,6 +106,36 @@ public class LeGuanLoveApp {
                 .entity(LoveReport.class);
         log.info("loveReport : {}", entity);
         return entity;
+    }
+
+    @jakarta.annotation.Resource
+    private VectorStore loveAppVectorStore;
+
+    /**
+     * 和RAG知识库进行对话
+     * @param message
+     * @param chatId
+     * @return
+     */
+    public String doChatWithRag(String message, String chatId) {
+        ChatResponse response = chatClient
+                .prompt()
+                .user(message)
+                .advisors(spec ->
+                        spec.param(ChatMemory.CONVERSATION_ID, chatId)
+                )
+                // 开启日志
+                .advisors(new MyLoggerAdvisor())
+                // 应用RAG 知识库问答
+                .advisors(QuestionAnswerAdvisor.builder(loveAppVectorStore).build())
+                .call()
+                .chatResponse();
+        String content = response.getResult().getOutput().getText();
+        Integer totalTokens = response.getMetadata().getUsage().getTotalTokens();
+        String model = response.getMetadata().getModel();
+        log.info("模型: {}，消耗token:{}", model, totalTokens);
+        log.info("content: {}", content);
+        return content;
     }
 }
 

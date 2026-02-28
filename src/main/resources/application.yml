@@ -14,6 +14,9 @@ spring:
       chat:
         options:
           model: qwen-plus
+      embedding:
+        options:
+          model: text-embedding-v2
 
 
 

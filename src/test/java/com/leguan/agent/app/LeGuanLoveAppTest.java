@@ -45,4 +45,14 @@ class LeGuanLoveAppTest {
 //        Assertions.assertNotNull(loveReport1);
 
     }
+
+
+    @Test
+    void doChatWithRag() {
+        String chatId = UUID.randomUUID().toString();
+        String message = "我已经结婚了，但是怎样维护婚后夫妻间的亲密关系";
+        String s = leGuanLoveApp.doChatWithRag(message, chatId);
+        System.out.println("回答如下");
+        System.out.println(s);
+    }
 }
