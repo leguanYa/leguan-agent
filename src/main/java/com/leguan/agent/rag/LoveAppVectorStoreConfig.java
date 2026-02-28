@@ -28,11 +28,7 @@ public class LoveAppVectorStoreConfig {
     VectorStore loveAppVectorStore(EmbeddingModel openAiEmbeddingModel) {
         SimpleVectorStore simpleVectorStore = SimpleVectorStore.builder(openAiEmbeddingModel).build();
         List<Document> documents = loveAppDocumentLoader.loadMarkDowns();
-        try {
-            simpleVectorStore.add(documents);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        simpleVectorStore.add(documents);
         return simpleVectorStore;
     }
 }
