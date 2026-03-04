@@ -165,5 +165,32 @@ public class LeGuanLoveApp {
         log.info("content: {}", content);
         return content;
     }
+
+
+    @jakarta.annotation.Resource
+    private VectorStore pgVectorVectorStore;
+
+
+    public String doChatWithPgVectorRag(String message, String chatId) {
+
+        ChatResponse response = chatClient
+                .prompt()
+                .user(message)
+                .advisors(spec ->
+                        spec.param(ChatMemory.CONVERSATION_ID, chatId)
+                )
+                // 开启日志
+                .advisors(new MyLoggerAdvisor())
+                // 应用增加检索服务（基于PgVector向量存储）
+                .advisors(QuestionAnswerAdvisor.builder(pgVectorVectorStore).build())
+                .call()
+                .chatResponse();
+        String content = response.getResult().getOutput().getText();
+        Integer totalTokens = response.getMetadata().getUsage().getTotalTokens();
+        String model = response.getMetadata().getModel();
+        log.info("模型: {}，消耗token:{}", model, totalTokens);
+        log.info("content: {}", content);
+        return content;
+    }
 }
 
