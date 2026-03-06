@@ -17,6 +17,22 @@ spring:
       embedding:
         options:
           model: text-embedding-v2
+    dashscope:
+      api-key: your-api-key
+    vectorstore:
+      pgvector:
+        index-type: HNSW
+        dimensions: 1536
+        distance-type: COSINE_DISTANCE
+        max-document-batch-size: 10000 # Optional: Maximum number of documents per batch
+
+  datasource:
+    url: your_connent_url 例如：jdbc:postgresql://127.0.0.1:5432/leguan_agent
+    username: your_name
+    password: your_password
+
+
+
 
 
 
