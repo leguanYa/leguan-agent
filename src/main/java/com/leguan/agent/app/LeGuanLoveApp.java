@@ -2,6 +2,7 @@ package com.leguan.agent.app;
 
 import com.leguan.agent.advisor.MyLoggerAdvisor;
 import com.leguan.agent.advisor.ReReadingAdvisor;
+import com.leguan.agent.rag.LoveAppRagCustomAdvisorFactory;
 import com.leguan.agent.rag.QueryRewriter;
 import com.leguan.agent.repository.MyFileChatMemoryRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -211,6 +212,39 @@ public class LeGuanLoveApp {
                 )
                 // 开启日志
                 .advisors(new MyLoggerAdvisor())
+                .call()
+                .chatResponse();
+        String content = response.getResult().getOutput().getText();
+        Integer totalTokens = response.getMetadata().getUsage().getTotalTokens();
+        String model = response.getMetadata().getModel();
+        log.info("模型: {}，消耗token:{}", model, totalTokens);
+        log.info("content: {}", content);
+        return content;
+    }
+
+
+
+
+
+
+    // 检索增强
+    public String doChatWithEnhance(String message, String chatId) {
+
+
+        String queryTransform = queryRewriter.doQueryRewrite(message);
+        ChatResponse response = chatClient
+                .prompt()
+                .user(queryTransform)
+                .advisors(spec ->
+                        spec.param(ChatMemory.CONVERSATION_ID, chatId)
+                )
+                // 开启日志
+                .advisors(new MyLoggerAdvisor())
+                // 使用自定义的 RAG 检索增强器服务(文档查询器+上下文增强器)
+                .advisors(
+                        LoveAppRagCustomAdvisorFactory.createLoveAppRagCustomAdvisor(loveAppVectorStore, "单身")
+//                        LoveAppRagCustomAdvisorFactory.createLoveAppRagCustomAdvisor(loveAppVectorStore, "已婚")
+                )
                 .call()
                 .chatResponse();
         String content = response.getResult().getOutput().getText();
