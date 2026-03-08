@@ -23,12 +23,16 @@ public class LoveAppVectorStoreConfig {
     @Resource
     private LoveAppDocumentLoader loveAppDocumentLoader;
 
+    @Resource
+    private MyKeywordEnricher myKeywordEnricher;
 
     @Bean
     VectorStore loveAppVectorStore(EmbeddingModel openAiEmbeddingModel) {
         SimpleVectorStore simpleVectorStore = SimpleVectorStore.builder(openAiEmbeddingModel).build();
         List<Document> documents = loveAppDocumentLoader.loadMarkDowns();
-        simpleVectorStore.add(documents);
+        // 自动补充元数据信息
+        List<Document> enricherDocuments = myKeywordEnricher.enricherDocuments(documents);
+        simpleVectorStore.add(enricherDocuments);
         return simpleVectorStore;
     }
 }
