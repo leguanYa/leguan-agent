@@ -73,4 +73,14 @@ class LeGuanLoveAppTest {
         System.out.println("回答如下");
         System.out.println(s);
     }
+
+    @Test
+    void doChatWithRewriter() {
+
+        String chatId = UUID.randomUUID().toString();
+        String message = "我已经结婚了，但是怎样维护婚后夫妻间的亲密关系呀呀呀呀！！！！";
+        String s = leGuanLoveApp.doChatWithRewriter(message, chatId);
+        System.out.println("回答如下");
+        System.out.println(s);
+    }
 }

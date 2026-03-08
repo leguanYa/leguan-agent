@@ -2,6 +2,7 @@ package com.leguan.agent.app;
 
 import com.leguan.agent.advisor.MyLoggerAdvisor;
 import com.leguan.agent.advisor.ReReadingAdvisor;
+import com.leguan.agent.rag.QueryRewriter;
 import com.leguan.agent.repository.MyFileChatMemoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -183,6 +184,33 @@ public class LeGuanLoveApp {
                 .advisors(new MyLoggerAdvisor())
                 // 应用增加检索服务（基于PgVector向量存储）
                 .advisors(QuestionAnswerAdvisor.builder(pgVectorVectorStore).build())
+                .call()
+                .chatResponse();
+        String content = response.getResult().getOutput().getText();
+        Integer totalTokens = response.getMetadata().getUsage().getTotalTokens();
+        String model = response.getMetadata().getModel();
+        log.info("模型: {}，消耗token:{}", model, totalTokens);
+        log.info("content: {}", content);
+        return content;
+    }
+
+
+    @jakarta.annotation.Resource
+    private QueryRewriter queryRewriter;
+
+    // 使用改写后的查询
+    public String doChatWithRewriter(String message, String chatId) {
+
+
+        String queryTransform = queryRewriter.doQueryRewrite(message);
+        ChatResponse response = chatClient
+                .prompt()
+                .user(queryTransform)
+                .advisors(spec ->
+                        spec.param(ChatMemory.CONVERSATION_ID, chatId)
+                )
+                // 开启日志
+                .advisors(new MyLoggerAdvisor())
                 .call()
                 .chatResponse();
         String content = response.getResult().getOutput().getText();
