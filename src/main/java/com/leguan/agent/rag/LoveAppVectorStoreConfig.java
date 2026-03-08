@@ -31,8 +31,9 @@ public class LoveAppVectorStoreConfig {
         SimpleVectorStore simpleVectorStore = SimpleVectorStore.builder(openAiEmbeddingModel).build();
         List<Document> documents = loveAppDocumentLoader.loadMarkDowns();
         // 自动补充元数据信息
-        List<Document> enricherDocuments = myKeywordEnricher.enricherDocuments(documents);
-        simpleVectorStore.add(enricherDocuments);
+//        List<Document> enricherDocuments = myKeywordEnricher.enricherDocuments(documents);
+//        simpleVectorStore.add(enricherDocuments);
+        simpleVectorStore.add(documents);
         return simpleVectorStore;
     }
 }
