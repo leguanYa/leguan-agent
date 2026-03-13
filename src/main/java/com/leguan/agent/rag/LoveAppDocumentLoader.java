@@ -1,9 +1,13 @@
 package com.leguan.agent.rag;
 
+import com.alibaba.cloud.ai.document.TextDocumentParser;
+import com.alibaba.cloud.ai.reader.github.GitHubDocumentReader;
+import com.alibaba.cloud.ai.reader.github.GitHubResource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.reader.markdown.MarkdownDocumentReader;
 import org.springframework.ai.reader.markdown.config.MarkdownDocumentReaderConfig;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
@@ -51,5 +55,24 @@ public class LoveAppDocumentLoader {
             log.error("Markdown 文件加载失败", e);
         }
         return allDocuments;
+    }
+
+    @Value("${leguan.github.token}")
+    private String githubToken;
+
+    // 读取GitHub文档
+    public List<Document> loadGithubDoc() {
+
+        GitHubResource resource = GitHubResource.builder()
+                .owner("alibaba") //作者
+                .repo("spring-ai-alibaba") //仓库名称
+                .branch("main") // 分支
+                .path("README.md")
+                .gitHubToken(githubToken)
+                .build();
+        TextDocumentParser textDocumentParser = new TextDocumentParser();
+        GitHubDocumentReader reader = new GitHubDocumentReader(resource, textDocumentParser);
+        List<Document> documents = reader.get();
+        return documents;
     }
 }
