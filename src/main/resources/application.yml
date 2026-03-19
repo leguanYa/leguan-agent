@@ -31,6 +31,10 @@ spring:
     username: your_name
     password: your_password
 
+  data:
+    redis:
+      url: redis://127.0.0.1:6379
+
 
 
 leguan:
