@@ -2,6 +2,7 @@ package com.leguan.agent.app;
 
 import com.leguan.agent.advisor.MyLoggerAdvisor;
 import com.leguan.agent.repository.MyFileChatMemoryRepository;
+import com.leguan.agent.tool.CustomerTools;
 import com.leguan.agent.tool.WeatherTools;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 @Component
 @Slf4j
@@ -84,6 +86,27 @@ public class LeguanToolApp {
                 .prompt()
                 .user(message)
                 .toolCallbacks(allTools)
+                .advisors(spec ->
+                        spec.param(ChatMemory.CONVERSATION_ID, chatId)
+                )
+                .call()
+                .chatResponse();
+        String content = response.getResult().getOutput().getText();
+        log.info("content: {}", content);
+        return content;
+    }
+
+    @jakarta.annotation.Resource
+    private CustomerTools customerTools;
+
+    public String doChatWithUserTools(String message, String chatId) {
+        new CustomerTools();
+        ChatResponse response = chatClient
+                .prompt()
+                .user(message)
+                .tools(customerTools)
+                // 使用工具上下文的方式处理一些参数传递，例如用户信息等
+                .toolContext(Map.of("userId", 1L))
                 .advisors(spec ->
                         spec.param(ChatMemory.CONVERSATION_ID, chatId)
                 )

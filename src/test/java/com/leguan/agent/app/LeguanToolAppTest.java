@@ -52,4 +52,11 @@ class LeguanToolAppTest {
         Assertions.assertNotNull(answer);
     }
 
+    @Test
+    void doChatWithUserTools() {
+        String chatId = UUID.randomUUID().toString();
+        String message = "帮我查询用户信息";
+        String answer = leguanToolApp.doChatWithUserTools(message, chatId);
+        Assertions.assertNotNull(answer);
+    }
 }
