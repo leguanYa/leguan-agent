@@ -13,7 +13,7 @@ spring:
       api-key: your-api-key
       chat:
         options:
-          model: qwen-plus
+          model: qwen-plus-2025-07-28
       embedding:
         options:
           model: text-embedding-v2
@@ -47,11 +47,20 @@ spring:
     redis:
       url: redis://127.0.0.1:6379
 
-
+logging:
+  level:
+    org.springframework.ai: DEBUG
+    org.springframework.web.client: DEBUG
+    org.springframework.web.reactive.function.client: DEBUG
 
 leguan:
   github:
     token: your_github_token
+
+# searchApi
+search-api:
+  api-key: 你的 API Key
+
 
 
 
