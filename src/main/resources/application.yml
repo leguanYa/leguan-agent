@@ -27,9 +27,21 @@ spring:
         max-document-batch-size: 10000 # Optional: Maximum number of documents per batch
 
   datasource:
-    url: your_connent_url 例如：jdbc:postgresql://127.0.0.1:5432/leguan_agent
-    username: your_name
-    password: your_password
+    dynamic:
+      primary: mysql   # 默认数据源
+      datasource:
+        mysql:
+          url: jdbc:mysql://127.0.0.1:3306/leguan_agent?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+          username: root
+          password: root
+          driver-class-name: com.mysql.cj.jdbc.Driver
+
+        postgres:
+          url: jdbc:postgresql://127.0.0.1:5432/leguan_agent
+          username: postgres
+          password: root
+          driver-class-name: org.postgresql.Driver
+
 
   data:
     redis:

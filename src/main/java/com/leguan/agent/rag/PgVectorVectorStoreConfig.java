@@ -1,5 +1,6 @@
 package com.leguan.agent.rag;
 
+import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
 import jakarta.annotation.Resource;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.embedding.EmbeddingModel;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 import static org.springframework.ai.vectorstore.pgvector.PgVectorStore.PgDistanceType.COSINE_DISTANCE;
@@ -27,7 +29,11 @@ public class PgVectorVectorStoreConfig {
 
 
     @Bean
-    public VectorStore pgVectorVectorStore(JdbcTemplate jdbcTemplate, EmbeddingModel openAiEmbeddingModel) {
+    public VectorStore pgVectorVectorStore(DataSource dataSource, EmbeddingModel openAiEmbeddingModel) {
+
+        DynamicRoutingDataSource ds = (DynamicRoutingDataSource) dataSource;
+        DataSource pg = ds.getDataSource("postgres");
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(pg);
         VectorStore vectorStore = PgVectorStore.builder(jdbcTemplate, openAiEmbeddingModel)
                 .dimensions(1536)                    // 不要盲目设置
                 .distanceType(COSINE_DISTANCE)       // Optional: defaults to COSINE_DISTANCE
