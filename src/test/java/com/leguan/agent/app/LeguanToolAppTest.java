@@ -1,6 +1,7 @@
 package com.leguan.agent.app;
 
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,6 +10,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 @SpringBootTest
 class LeguanToolAppTest {
 
@@ -57,6 +59,25 @@ class LeguanToolAppTest {
         String chatId = UUID.randomUUID().toString();
         String message = "帮我查询用户信息";
         String answer = leguanToolApp.doChatWithUserTools(message, chatId);
+        Assertions.assertNotNull(answer);
+    }
+
+    @Test
+    void doChatWithUserCustomizationTools() {
+        String chatId = UUID.randomUUID().toString();
+        String message = "上海今天的天气怎么样，获取完天气后在帮我查询用户信息";
+        String answer = leguanToolApp.doChatWithUserCustomizationTools(message, chatId);
+        Assertions.assertNotNull(answer);
+    }
+
+
+
+    @Test
+    void doChatWithUserCustomizationToolsss() {
+        String chatId = UUID.randomUUID().toString();
+        String message = "上海今天的天气怎么样，获取完天气后在帮我查询用户信息";
+        String answer = leguanToolApp.doChatWithUserCustomizationToolAdvisor(message, chatId);
+        log.info("回答如下:{}", answer);
         Assertions.assertNotNull(answer);
     }
 }
