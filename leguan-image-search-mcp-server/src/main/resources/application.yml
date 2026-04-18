@@ -2,7 +2,7 @@ spring:
   application:
     name: leguan-image-search-mcp-server
   profiles:
-    active: stdio # 读取哪个配置文件
+    active: sse # 读取哪个配置文件
 
 server:
   port: 8122

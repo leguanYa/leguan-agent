@@ -27,8 +27,12 @@ spring:
         max-document-batch-size: 10000 # Optional: Maximum number of documents per batch
     mcp:
       client:
-        stdio:
-          servers-configuration: classpath:mcp-servers.json # 注意里面的 "command": windows为"npx.cmd",MAC和linux没有cmd后缀,
+        sse:
+          connections:
+            server1:
+              url: http://127.0.0.1:8122
+  #        stdio:
+#          servers-configuration: classpath:mcp-servers.json # 注意里面的 "command": windows为"npx.cmd",MAC和linux没有cmd后缀,
   datasource:
     dynamic:
       primary: mysql   # 默认数据源
