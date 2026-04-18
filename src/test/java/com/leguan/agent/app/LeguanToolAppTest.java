@@ -83,10 +83,19 @@ class LeguanToolAppTest {
 
     @Test
     void doChatWithMCP() {
-        String chatId = UUID.randomUUID().toString();
-        String message = "我现在在上海浦东新区，推荐几个美食地点";
-        String s = leguanToolApp.doChatWithMCP(message, chatId);
-        System.out.println("回答如下");
-        System.out.println(s);
+        // 高德地图mcp
+//        String chatId = UUID.randomUUID().toString();
+//        String message = "我现在在上海浦东新区，推荐几个美食地点";
+//        String s = leguanToolApp.doChatWithMCP(message, chatId);
+//        System.out.println("回答如下");
+//        System.out.println(s);
+
+
+
+        // 图片搜索本地MCP
+        String chatIdT = UUID.randomUUID().toString();
+        String messageSearch = "帮我搜索一些让人心情愉悦的图片";
+        String images = leguanToolApp.doChatWithMCP(messageSearch, chatIdT);
+        log.info("图片搜索结果如下:{}",  images);
     }
 }
