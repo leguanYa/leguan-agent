@@ -25,7 +25,10 @@ spring:
         dimensions: 1536
         distance-type: COSINE_DISTANCE
         max-document-batch-size: 10000 # Optional: Maximum number of documents per batch
-
+    mcp:
+      client:
+        stdio:
+          servers-configuration: classpath:mcp-servers.json # 注意里面的 "command": windows为"npx.cmd",MAC和linux没有cmd后缀,
   datasource:
     dynamic:
       primary: mysql   # 默认数据源

@@ -80,4 +80,13 @@ class LeguanToolAppTest {
         log.info("回答如下:{}", answer);
         Assertions.assertNotNull(answer);
     }
+
+    @Test
+    void doChatWithMCP() {
+        String chatId = UUID.randomUUID().toString();
+        String message = "我现在在上海浦东新区，推荐几个美食地点";
+        String s = leguanToolApp.doChatWithMCP(message, chatId);
+        System.out.println("回答如下");
+        System.out.println(s);
+    }
 }

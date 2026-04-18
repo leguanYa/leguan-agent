@@ -22,6 +22,7 @@ import org.springframework.ai.model.tool.ToolCallingManager;
 import org.springframework.ai.model.tool.ToolExecutionResult;
 import org.springframework.ai.support.ToolCallbacks;
 import org.springframework.ai.tool.ToolCallback;
+import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -238,5 +239,40 @@ public class LeguanToolApp {
         }
 
         return chatResponse.getResult().getOutput().getText();
+    }
+
+
+    // 引入ToolCallbackProvider作用是，可以获取到配置中定义的MCP服务提供的所有工具，并提供给ChatClient
+    @jakarta.annotation.Resource
+    private ToolCallbackProvider toolCallbackProvider;
+
+
+    /**
+     * 调用map
+     * @param message
+     * @param chatId
+     * @return
+     */
+    public String doChatWithMCP(String message, String chatId) {
+
+
+        ChatResponse response = chatClient
+                .prompt()
+                .user(message)
+                .advisors(spec ->
+                        spec.param(ChatMemory.CONVERSATION_ID, chatId)
+                )
+                // 开启日志
+                .advisors(new MyLoggerAdvisor())
+                // 应用增加检索服务（基于PgVector向量存储）
+                .toolCallbacks(toolCallbackProvider)
+                .call()
+                .chatResponse();
+        String content = response.getResult().getOutput().getText();
+        Integer totalTokens = response.getMetadata().getUsage().getTotalTokens();
+        String model = response.getMetadata().getModel();
+        log.info("模型: {}，消耗token:{}", model, totalTokens);
+        log.info("content: {}", content);
+        return content;
     }
 }
