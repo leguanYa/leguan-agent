@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+:root {
+  /* 赛博主色 */
+  --color-primary: #00f0ff;
+  --color-primary-dark: #00b8d4;
+  --color-primary-light: #67e8f9;
+  --color-accent: #a855f7;
+  --color-accent-pink: #ff0080;
+
+  /* 主题色 */
+  --color-love: #ff0080;
+  --color-love-light: #ff4da6;
+  --color-manus: #00d4ff;
+  --color-manus-light: #38bdf8;
+
+  /* 深色背景 */
+  --color-bg: #0a0e17;
+  --color-bg-gradient-start: #0a0e17;
+  --color-bg-gradient-end: #121a2e;
+  --color-surface: rgba(15, 23, 42, 0.75);
+  --color-surface-solid: #0f172a;
+  --color-surface-elevated: rgba(20, 30, 55, 0.9);
+  --color-border: rgba(0, 240, 255, 0.15);
+  --color-border-light: rgba(0, 240, 255, 0.08);
+  --color-border-glow: rgba(0, 240, 255, 0.35);
+  --color-text: #e2e8f0;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-error: #ff4466;
+  --color-error-bg: rgba(255, 68, 102, 0.12);
+
+  /* 霓虹光效 */
+  --glow-cyan: 0 0 20px rgba(0, 240, 255, 0.35), 0 0 40px rgba(0, 240, 255, 0.1);
+  --glow-pink: 0 0 20px rgba(255, 0, 128, 0.35), 0 0 40px rgba(255, 0, 128, 0.1);
+  --glow-purple: 0 0 20px rgba(168, 85, 247, 0.35);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 24px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.6);
+
+  /* 圆角 */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-full: 9999px;
+
+  /* 间距 */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* 布局 */
+  --header-height: 60px;
+  --chat-max-width: 960px;
+  --home-max-width: 920px;
+  --avatar-size: 40px;
+  --font-family: 'Rajdhani', system-ui, sans-serif;
+  --font-display: 'Orbitron', system-ui, sans-serif;
+}
