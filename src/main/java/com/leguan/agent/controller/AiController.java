@@ -8,13 +8,15 @@ import org.springframework.ai.tool.ToolCallback;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import reactor.core.publisher.Flux;
 
 import java.io.IOException;
 
-@RestController("/ai")
+@RestController
+@RequestMapping("/ai")
 public class AiController {
 
 
@@ -92,7 +94,6 @@ public class AiController {
     /**
      * 流式调用manus智能体
      * @param message
-     * @param chatId
      * @return
      */
     @GetMapping("/manus/chat")
