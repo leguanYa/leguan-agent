@@ -21,6 +21,7 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -87,6 +88,20 @@ public class LeGuanLoveApp {
         log.info("content: {}", content);
         return content;
     }
+
+
+
+    public Flux<String> doChatByStream(String message, String chatId) {
+        return  chatClient
+                .prompt()
+                .user(message)
+                .advisors(spec ->
+                        spec.param(ChatMemory.CONVERSATION_ID, chatId)
+                )
+                .stream()
+                .content();
+    }
+
 
 
     record LoveReport(String tittle, List<String> suggestions, List<String> locations) {
