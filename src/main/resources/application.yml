@@ -13,7 +13,7 @@ spring:
       api-key: your-api-key
       chat:
         options:
-          model: qwen-plus-2025-07-28
+          model: qwen3.5-flash
       embedding:
         options:
           model: text-embedding-v2
@@ -74,7 +74,7 @@ search-api:
 
 
 server:
-  port: 8787
+  port: 8123
   servlet:
     contextPath: /api
 
